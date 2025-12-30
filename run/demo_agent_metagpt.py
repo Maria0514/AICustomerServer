@@ -471,3 +471,5 @@ if user_input := st.chat_input("请输入问题"):
         st.session_state["chat_history"].append({"role": "assistant", "content": fallback})
         with st.chat_message("assistant"):
             st.markdown(fallback)
+
+# 测试注释
