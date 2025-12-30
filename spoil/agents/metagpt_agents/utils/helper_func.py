@@ -1,6 +1,7 @@
 from spoil import TIANJI_PATH
 import json
 import os
+from pathlib import Path
 from datetime import datetime
 
 
@@ -18,14 +19,30 @@ def timestamp_str():
 
 # 返回 json 文件里的内容
 def load_json(file_name):
-    with open(
-        os.path.join(
-            TIANJI_PATH, "tianji", "agents", "metagpt_agents", "utils", file_name
-        ),
-        "r",
-        encoding="utf-8",
-    ) as file:
-        return json.load(file)
+    candidates = [
+        Path(TIANJI_PATH)
+        / "spoil"
+        / "agents"
+        / "metagpt_agents"
+        / "utils"
+        / file_name,
+        Path(TIANJI_PATH)
+        / "tianji"
+        / "agents"
+        / "metagpt_agents"
+        / "utils"
+        / file_name,
+        Path(__file__).resolve().parent / file_name,
+    ]
+
+    for path in candidates:
+        if path.exists():
+            with open(path, "r", encoding="utf-8") as file:
+                return json.load(file)
+
+    raise FileNotFoundError(
+        f"找不到 {file_name}。尝试过的路径: " + ", ".join(str(p) for p in candidates)
+    )
 
 # 提取所有 json 文件里的场景标签
 def extract_all_types(json_data):

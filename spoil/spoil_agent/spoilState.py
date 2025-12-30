@@ -7,6 +7,10 @@ class SpoilState(TypedDict):
     scene_attributes: Dict[str, str]
     retrieved_docs: List[str]
     search_enabled: bool
+    # 由 extend_query_node 生成，用于 search_node
+    search_queries: List[str]
     search_results: Dict[str, Any]
+    # 由 fillter_web_node 生成，给 answer_node 拼接上下文
+    search_context: str
     final_answer: str
     need_more_info: bool

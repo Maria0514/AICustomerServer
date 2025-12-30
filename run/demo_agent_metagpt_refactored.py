@@ -18,8 +18,8 @@ from langchain_community.document_loaders import DirectoryLoader, TextLoader
 
 # 导入重构后的模块
 from spoil.spoil_agent import build_xhs_workflow
-from spoil.spoil_agent.config import RAG_SCENE_MAP, SCENE_JSON, SCENE_OPTIONS
-from spoil.spoil_agent.nodes.intent_node import TianjiState
+from spoil.spoil_agent.config import RAG_SCENE_MAP, SCENE_OPTIONS
+from spoil.spoil_agent.spoilState import SpoilState
 
 load_dotenv()
 
@@ -162,14 +162,16 @@ if user_input := st.chat_input("💡 告诉我你想创作什么样的文案..."
 
     st.session_state["chat_history"].append({"role": "user", "content": user_input})
     
-    init_state: TianjiState = {
+    init_state: SpoilState = {
         "user_input": user_input,
         "chat_history": st.session_state["chat_history"],
         "scene_label": st.session_state.get("scene_label", ""),
         "scene_attributes": st.session_state.get("scene_attributes", {}),
         "retrieved_docs": [],
         "search_enabled": st.session_state.get("enable_se", False),
+        "search_queries": [],
         "search_results": {},
+        "search_context": "",
         "final_answer": "",
         "need_more_info": False,
     }

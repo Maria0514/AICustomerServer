@@ -28,38 +28,34 @@ class SharedDataSingleton:
         user_id = ""
         if "user_id" in st.session_state:
             user_id = st.session_state["user_id"]
-        ret_cls_obj = {}
         if user_id == "":
-            ret_cls_obj = cls()
-            ret_cls_obj = SharedDataSingleton._new_init(ret_cls_obj)
-        else:
-            if user_id in SharedDataSingleton.uuid_obj:
-                pass
-            else:
-                ret_cls_obj = cls()
-                ret_cls_obj = SharedDataSingleton._new_init(ret_cls_obj)
-                SharedDataSingleton.uuid_obj[user_id] = ret_cls_obj
+            inst = cls()
+            return SharedDataSingleton._new_init(inst)
 
-            ret_cls_obj = SharedDataSingleton.uuid_obj[user_id]
-        return ret_cls_obj
+        if user_id not in SharedDataSingleton.uuid_obj:
+            inst = cls()
+            SharedDataSingleton.uuid_obj[user_id] = SharedDataSingleton._new_init(inst)
+        return SharedDataSingleton.uuid_obj[user_id]
 
-    def _new_init(cls):
-        cls._instance = None
-        cls.json_from_data = None  # 这是要共享的变量
-        cls.message_list_for_agent = []
-        cls.scene_attribute = {}
-        cls.scene_label = ""
-        cls.extra_query = []
-        cls.search_results = {}
-        cls.chat_history = []
-        cls.uuid_obj = {}
-        return cls
+    def _new_init(inst):
+        # 注意：这里初始化的是“当前会话实例”的字段，不应该重置全局 uuid_obj
+        inst._instance = None
+        inst.json_from_data = None
+        inst.message_list_for_agent = []
+        inst.filter_weblist = []
+        inst.scene_attribute = {}
+        inst.scene_label = ""
+        inst.extra_query = []
+        inst.search_results = {}
+        inst.chat_history = []
+        inst.ask_num = 0
+        return inst
 
     def __init__(self):
         if SharedDataSingleton._instance is not None:
             raise Exception("This class is a singleton!")
         # 可以在这里初始化共享变量
-        SharedDataSingleton.json_from_data = {
+        self.json_from_data = {
             "requirement": "",
             "scene": "",
             "festival": "",

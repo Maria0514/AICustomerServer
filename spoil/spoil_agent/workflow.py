@@ -24,31 +24,34 @@ def build_xhs_workflow(llm: Any, retrievers: Dict[str, Any], tavily_client: Any 
     workflow.add_node("intent", lambda state: intent_node(state, llm))
     workflow.add_node("refine", lambda state: refine_node(state, llm))
     workflow.add_node("rag", lambda state: rag_node(state, retrievers))
-    workflow.add_node("search", lambda state: search_node(state, tavily_client))
-    workflow.add_node("answer", lambda state: answer_node(state, llm))
     workflow.add_node("question", lambda state: question_node(state, llm))
     workflow.add_node("extend_query", lambda state: extend_query_node(state, llm))
+    workflow.add_node("search", lambda state: search_node(state, tavily_client))
     workflow.add_node("fillter_web", lambda state: fillter_web_node(state, llm))
+    workflow.add_node("answer", lambda state: answer_node(state, llm))
 
     
     # 设置入口点
     workflow.set_entry_point("intent")
     workflow.add_edge("intent", "refine")
     
-    # 条件分支：refine 之后，若只需要单轮对话则直接结束，否则进行rag
+    # 条件分支：refine 之后，若需要追问则进入 question，否则进行 rag
     def after_refine(state: SpoilState):
-        return END if state.get("need_more_info") else "rag"
+        return "question" if state.get("need_more_info") else "rag"
     
-    workflow.add_conditional_edges("refine", after_refine, {"rag": "rag", END: END})
+    workflow.add_conditional_edges("refine", after_refine, {"rag": "rag", "question": "question"})
+    workflow.add_edge("question", END)
     
-    # 条件分支：rag 之后，若开启了搜索功能则进行搜索第一步：写query，若未开启则进行答案生成
+    # 条件分支：rag 之后，若开启了搜索功能则进行：扩展查询->搜索->过滤网页；否则直接生成答案
     def after_rag(state: SpoilState):
-        return "search" if state.get("search_enabled") else "answer"
+        return "extend_query" if state.get("search_enabled") else "answer"
     
-    workflow.add_conditional_edges("rag", after_rag, {"search": "extend_query", "answer": "answer"})
+    workflow.add_conditional_edges("rag", after_rag, {"extend_query": "extend_query", "answer": "answer"})
     
     # 其他边
-    workflow.add_edge("search", "answer")
+    workflow.add_edge("extend_query", "search")
+    workflow.add_edge("search", "fillter_web")
+    workflow.add_edge("fillter_web", "answer")
     workflow.add_edge("answer", END)
     
     return workflow.compile()

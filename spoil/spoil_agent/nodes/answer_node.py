@@ -1,7 +1,12 @@
 """文案生成 Node"""
 
-import streamlit as st
 from typing import Any, Dict, List, TypedDict
+
+try:
+    import streamlit as st
+except Exception:  # pragma: no cover
+    st = None
+
 from spoil.agents.metagpt_agents.utils.helper_func import (
     extract_single_type_attributes_and_examples,
 )
@@ -58,7 +63,7 @@ def answer_node(state: SpoilState, llm: Any):
     scene_label = state.get("scene_label", "").split("：")[0].strip()
     scene, _, _ = extract_single_type_attributes_and_examples(SCENE_JSON, scene_label)
     rag_ctx = _format_rag_docs(state.get("retrieved_docs", []))
-    search_ctx = _format_search_results(state.get("search_results", {}))
+    search_ctx = state.get("search_context") or _format_search_results(state.get("search_results", {}))
     
     prompt = ANSWER_PROMPT_TEMPLATE.format(
         scene=scene,
@@ -71,7 +76,12 @@ def answer_node(state: SpoilState, llm: Any):
     rsp = llm_invoke(prompt, llm)
     ans = rsp if isinstance(rsp, str) else getattr(rsp, "content", str(rsp))
     
-    # 标记对话完成
-    st.session_state["chat_completed"] = True
+    # 标记对话完成（在 Streamlit 运行时）
+    if st is not None:
+        try:
+            st.session_state["chat_completed"] = True
+        except Exception:
+            # 允许在非 streamlit run 环境下被当作普通库调用
+            pass
     
     return {"final_answer": ans}

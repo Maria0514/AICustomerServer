@@ -1,8 +1,13 @@
 """属性提取 Node"""
 
 import json
-import streamlit as st
-from typing import Any, Dict, List, TypedDict
+from typing import Any, Dict, List
+
+try:
+    import streamlit as st
+except Exception:  # pragma: no cover
+    st = None
+
 from spoil.agents.metagpt_agents.utils.helper_func import (
     extract_single_type_attributes_and_examples,
     extract_attribute_descriptions,
@@ -11,18 +16,7 @@ from spoil.agents.metagpt_agents.utils.helper_func import (
 )
 from ..config import SCENE_JSON
 from ..prompts import REFINE_PROMPT_TEMPLATE, QUESTION_PROMPT_TEMPLATE
-
-
-class TianjiState(TypedDict):
-    user_input: str
-    chat_history: List[Dict[str, str]]
-    scene_label: str
-    scene_attributes: Dict[str, str]
-    retrieved_docs: List[str]
-    search_enabled: bool
-    search_results: Dict[str, Any]
-    final_answer: str
-    need_more_info: bool
+from ..spoilState import SpoilState
 
 
 def format_history(history: List[Dict[str, str]]) -> str:
@@ -34,8 +28,9 @@ def _sanitize_json(text: str) -> str:
     return (
         text.replace("```json", "")
         .replace("```", "")
-        .replace(""", '"')
-        .replace(""", '"')
+        .replace("\"", '"')
+        .replace("“", '"')
+        .replace("”", '"')
         .replace("，", ",")
         .strip()
     )
@@ -60,7 +55,7 @@ def ensure_scene_attributes(scene_label: str, current: Dict[str, str]) -> Dict[s
     return {attr: current.get(attr, "") for attr in attrs}
 
 
-def refine_node(state: TianjiState, llm: Any):
+def refine_node(state: SpoilState, llm: Any):
     """
     属性提取节点：从用户输入中提取文案创作所需的属性
     
@@ -77,8 +72,12 @@ def refine_node(state: TianjiState, llm: Any):
     if not scene_label or scene_label == "None" or not scene_label.isdigit() or not is_number_in_types(
         SCENE_JSON, int(scene_label)
     ):
-        st.warning("此模型只支持回答关于小红书文案创作的事项，已调用 API 为你进行单轮回答。")
-        rsp = llm_invoke(prompt=state["user_input"], llm=llm)
+        if st is not None:
+            try:
+                st.warning("此模型只支持回答关于小红书文案创作的事项，已调用 API 为你进行单轮回答。")
+            except Exception:
+                pass
+        rsp = llm_invoke(state["user_input"], llm=llm)
         return {"need_more_info": True, "final_answer": rsp if isinstance(rsp, str) else getattr(rsp, "content", str(rsp))}
 
     base_attrs = ensure_scene_attributes(scene_label, state.get("scene_attributes", {}))

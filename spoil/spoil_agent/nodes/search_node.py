@@ -45,7 +45,7 @@ def search_node(state: TianjiState, tavily_client: Any):
     if not tavily_client:
         return {"search_results": {}}
     
-    queries = _generate_queries(state)
+    queries = state.get("search_queries") or _generate_queries(state)
     results: Dict[str, Any] = {}
     
     for idx, q in enumerate(queries):

@@ -280,7 +280,7 @@ def refine_node(state: TianjiState):
     if not scene_label or scene_label == "None" or not scene_label.isdigit() or not is_number_in_types(
         SCENE_JSON, int(scene_label)
     ):
-        st.warning("此模型只支持回答关于人情世故的事项，已调用 API 为你进行单轮回答。")
+        st.warning("未识别到支持的内容类型（1-8），已调用 LLM 为你进行单轮文案生成。")
         rsp = llm_invoke(prompt=state["user_input"])
         return {"need_more_info": True, "final_answer": rsp if isinstance(rsp, str) else getattr(rsp, "content", str(rsp))}
 
@@ -471,7 +471,7 @@ for idx, turn in enumerate(st.session_state["chat_history"]):
 if user_input := st.chat_input("💡 告诉我你想创作什么样的文案..."):
     logger.info(f"用户输入：{user_input}")
     logger.info(f"历史对话：{st.session_state['chat_history']}")
-        # 如果上一个对话已完成，清空所有数据开启新对话
+    # 如果上一个对话已完成，清空所有数据开启新对话
     if st.session_state.get("chat_completed", False):
         st.session_state["chat_history"] = []
         st.session_state["scene_label"] = ""
