@@ -7,9 +7,9 @@ import json
 import asyncio
 from metagpt.actions import Action
 from metagpt.logs import logger
-from tianji.agents.metagpt_agents.utils.json_from import SharedDataSingleton
-from tianji.agents.metagpt_agents.utils.agent_llm import ZhipuApi as LLMApi
-from tianji.agents.metagpt_agents.utils.helper_func import *
+from spoil.agents.metagpt_agents.utils.json_from import SharedDataSingleton
+from spoil.agents.metagpt_agents.utils.agent_llm import ZhipuApi as LLMApi
+from spoil.agents.metagpt_agents.utils.helper_func import *
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import random

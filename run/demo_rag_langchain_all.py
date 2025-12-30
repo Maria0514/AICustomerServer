@@ -1,14 +1,14 @@
 import os
 import gradio as gr
 from dotenv import load_dotenv
-from tianji.knowledges.langchain_onlinellm.models import SiliconFlowEmbeddings, SiliconFlowLLM
+from spoil.knowledges.langchain_onlinellm.models import SiliconFlowEmbeddings, SiliconFlowLLM
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from langchain import hub
-from tianji import TIANJI_PATH
+from spoil import TIANJI_PATH
 import argparse
 from huggingface_hub import snapshot_download
 import requests

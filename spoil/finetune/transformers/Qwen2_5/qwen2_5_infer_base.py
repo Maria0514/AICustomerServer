@@ -4,7 +4,7 @@
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
-from tianji import TIANJI_PATH
+from spoil import TIANJI_PATH
 import os
 from modelscope import snapshot_download
 

@@ -1,11 +1,11 @@
 from pathlib import Path
 from loguru import logger
-import tianji
+import spoil
 
 
 def get_tianji_package_path():
     """Get the root directory of the installed package."""
-    package_root = Path(tianji.__file__).parent.parent
+    package_root = Path(spoil.__file__).parent.parent
     for i in (".git", ".gitignore"):
         if (package_root / i).exists():
             break

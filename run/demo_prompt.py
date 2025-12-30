@@ -7,7 +7,7 @@ import argparse
 load_dotenv()
 from zhipuai import ZhipuAI
 import os
-from tianji import TIANJI_PATH
+from spoil import TIANJI_PATH
 
 # 添加命令行参数解析
 parser = argparse.ArgumentParser(description='Launch Gradio application')

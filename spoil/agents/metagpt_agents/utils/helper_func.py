@@ -1,4 +1,4 @@
-from tianji import TIANJI_PATH
+from spoil import TIANJI_PATH
 import json
 import os
 from datetime import datetime

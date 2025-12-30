@@ -14,11 +14,11 @@ from streamlit_chat import message
 from dotenv import load_dotenv
 from langgraph.graph import END, StateGraph
 from tavily import TavilyClient
-from tianji.knowledges.langchain_onlinellm.models import SiliconFlowEmbeddings, SiliconFlowLLM, ZhipuLLM
+from spoil.knowledges.langchain_onlinellm.models import SiliconFlowEmbeddings, SiliconFlowLLM, ZhipuLLM
 
 import loguru
-from tianji import TIANJI_PATH
-from tianji.agents.metagpt_agents.utils.helper_func import (
+from spoil import TIANJI_PATH
+from spoil.agents.metagpt_agents.utils.helper_func import (
     extract_all_types,
     extract_all_types_and_examples,
     extract_attribute_descriptions,
@@ -27,7 +27,7 @@ from tianji.agents.metagpt_agents.utils.helper_func import (
     is_number_in_types,
     load_json,
 )
-from tianji.knowledges.langchain_onlinellm.models import SiliconFlowLLM
+from spoil.knowledges.langchain_onlinellm.models import SiliconFlowLLM
 try:
     from langchain_openai import OpenAIEmbeddings
 except ImportError:

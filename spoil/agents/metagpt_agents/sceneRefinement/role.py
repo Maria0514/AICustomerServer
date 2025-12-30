@@ -6,8 +6,8 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role, RoleReactMode
 from metagpt.schema import Message
 from .action import sceneRefineAnalyze, RaiseQuestion
-from tianji.agents.metagpt_agents.utils.json_from import SharedDataSingleton
-from tianji.agents.metagpt_agents.utils.helper_func import *
+from spoil.agents.metagpt_agents.utils.json_from import SharedDataSingleton
+from spoil.agents.metagpt_agents.utils.helper_func import *
 
 """
 场景细化 agent，具体作用为：

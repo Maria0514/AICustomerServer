@@ -1,0 +1,5 @@
+"""配置模块"""
+
+from .constants import RAG_SCENE_MAP, SCENE_JSON, SCENE_OPTIONS, SCENE_EXAMPLES
+
+__all__ = ["RAG_SCENE_MAP", "SCENE_JSON", "SCENE_OPTIONS", "SCENE_EXAMPLES"]

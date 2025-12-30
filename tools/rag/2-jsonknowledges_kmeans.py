@@ -18,7 +18,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sentence_transformers import SentenceTransformer
 import argparse
-from tianji import TIANJI_PATH
+from spoil import TIANJI_PATH
 import numpy as np
 
 

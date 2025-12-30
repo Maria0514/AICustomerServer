@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from metagpt.actions import Action
-from tianji.agents.metagpt_agents.utils.json_from import SharedDataSingleton
-from tianji.agents.metagpt_agents.utils.agent_llm import OpenaiApi as LLMApi
-from tianji.agents.metagpt_agents.utils.helper_func import extract_single_type_attributes_and_examples, extract_attribute_descriptions, load_json
+from spoil.agents.metagpt_agents.utils.json_from import SharedDataSingleton
+from spoil.agents.metagpt_agents.utils.agent_llm import OpenaiApi as LLMApi
+from spoil.agents.metagpt_agents.utils.helper_func import extract_single_type_attributes_and_examples, extract_attribute_descriptions, load_json
 from metagpt.logs import logger
 """
 回答助手 agent 所对应的 action。

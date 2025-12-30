@@ -57,10 +57,10 @@ class SiliconFlowLLM(LLM):
     token: Optional[str] = None
     client: Any = None
 
-    def __init__(self, model: str):
+    def __init__(self, model: str = "Qwen/Qwen2.5-7B-Instruct"):
         super().__init__()
         print("Initializing model..." + model)
-        self.model_name = model
+        self.model_name = model if model is not None else "Qwen/Qwen2.5-7B-Instruct"
         from openai import OpenAI
         self.token = os.getenv("OPENAI_API_KEY")
         if not self.token:

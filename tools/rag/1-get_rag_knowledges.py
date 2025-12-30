@@ -29,7 +29,7 @@ from openai import OpenAI  # 导入 deepseek 的 OpenAI
 from tqdm import tqdm  # 导入 tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer  # 导入 Hugging Face 的库
 from loguru import logger
-from tianji import TIANJI_PATH
+from spoil import TIANJI_PATH
 
 load_dotenv()
 
