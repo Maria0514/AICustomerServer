@@ -36,7 +36,7 @@ def get_embeddings():
     return SiliconFlowEmbeddings()
 
 
-def build_retrievers(chunk_size: int = 896, force: bool = False):
+def build_retrievers(chunk_size: int = 640, chunk_overlap: int = 120, force: bool = False):
     """构建各场景的检索器"""
     embeddings = get_embeddings()
     retrievers: Dict[str, Any] = {}
@@ -74,7 +74,7 @@ def build_retrievers(chunk_size: int = 896, force: bool = False):
                 loader_kwargs={"encoding": "utf-8"},
             )
             splitter = RecursiveCharacterTextSplitter(
-                chunk_size=chunk_size, chunk_overlap=200
+                chunk_size=chunk_size, chunk_overlap=chunk_overlap
             )
             try:
                 docs = splitter.split_documents(loader.load())
@@ -88,14 +88,18 @@ def build_retrievers(chunk_size: int = 896, force: bool = False):
             vectordb = Chroma.from_documents(
                 documents=docs, embedding=embeddings, persist_directory=persist
             )
-        
-        retrievers[scene_id] = vectordb.as_retriever()
+
+        # 使用 MMR 提升检索多样性，减少重复段落
+        retrievers[scene_id] = vectordb.as_retriever(
+            search_type="mmr",
+            search_kwargs={"k": 6, "fetch_k": 20},
+        )
     
     return retrievers
 
 
 # 初始化全局资源
-RAG_RETRIEVERS = build_retrievers()
+RAG_RETRIEVERS = build_retrievers(force=True)
 TAVILY_KEY = os.getenv("TAVILY_API_KEY", "")
 TAVILY_CLIENT = TavilyClient(api_key=TAVILY_KEY) if TAVILY_KEY else None
 
