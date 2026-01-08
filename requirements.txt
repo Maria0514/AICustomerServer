@@ -1,22 +1,50 @@
-python-dotenv
-modelscope
-tiktoken
-einops
-loguru
-bitsandbytes
-duckduckgo_search==5.3.1b1
-beautifulsoup4==4.12.3
-gradio<4.0
-streamlit
-streamlit_chat
-Agently
+# ============================================
+# 核心依赖 - 兼容版本组合
+# ============================================
+
+# 基础工具
+python-dotenv==1.0.0
+loguru==0.6.0
+tiktoken==0.12.0
+einops==0.8.1
+
+# LLM API 客户端
+openai==2.14.0
 zhipuai==2.0.1
+anthropic==0.18.1
+dashscope==1.14.1
 
-# for agent
-# metagpt==0.8.1  # 注意, metagpt 安装可能会导致 llamaindex 及 langchian 版本改变
+# HTTP 客户端
+httpx==0.28.1
+urllib3==1.26.20
 
-# for rag 
-langchain==0.2.15
-langchain_community==0.2.14
-langchain_chroma
-sentence-transformers
+# Agent 框架
+Agently==3.5.1.2
+
+# RAG 框架 - 使用兼容的版本组合
+langchain-core==0.2.43
+langchain==0.2.16
+langchain-community==0.2.16
+langchain-chroma==0.1.4
+langgraph==0.2.57
+sentence-transformers==5.2.0
+chromadb==0.5.23
+
+# 机器学习
+torch==2.5.1
+transformers==4.46.3
+datasets==4.4.2
+
+# 数据处理
+pandas==2.1.1
+numpy==1.24.3
+
+# Web 框架
+streamlit
+streamlit-chat==0.1.1
+gradio==4.26.0
+
+# 工具
+beautifulsoup4==4.12.3
+duckduckgo_search==4.1.1
+tavily==1.1.0
